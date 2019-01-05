@@ -17,6 +17,13 @@ class Person(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+data = [
+    {"companyId": "5be6ed4a1919bb1da710d4b918ff189d",
+     "systemId": "446c5df3d41c4e49a4ea673e83c1c8b8",
+     "content": "fileString",
+     "fileName":"file.name",
+     "type":1}
+]
 class Class(db.Model):
     __tablename__ = '_class'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}

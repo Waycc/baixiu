@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <title>Add new post &laquo; Admin</title>
-  <link rel="stylesheet" href="/static/js/bootstrap/css/bootstrap.css">
-  <link rel="stylesheet" href="/static/js/font-awesome/css/font-awesome.css">
-  <link rel="stylesheet" href="/static/js/nprogress/nprogress.css">
-  <link rel="stylesheet" href="/static/css/admin.css">
-  <script src="/static/js/nprogress/nprogress.js"></script>
-</head>
-<body>
-  <script>NProgress.start()</script>
-
+{% extends "admin/base.html" %}
+{% block content %}
   <div class="main">
     <?php include 'inc/navbar.php'; ?>
 
@@ -71,12 +59,5 @@
       </form>
     </div>
   </div>
+{% endblock %}
 
-  <?php $current_page = 'post-add'; ?>
-  <?php include 'inc/sidebar.php'; ?>
-
-  <script src="/static/js/jquery/jquery.js"></script>
-  <script src="/static/js/bootstrap/js/bootstrap.js"></script>
-  <script>NProgress.done()</script>
-</body>
-</html>
