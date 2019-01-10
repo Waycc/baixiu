@@ -17,20 +17,23 @@ class RegexConverter(BaseConverter):
 app = Flask(__name__)
 app.url_map.converters['regex'] = RegexConverter
 app.jinja_env.auto_reload = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{name}:{pwd}@{host}:{port}/{db}'.format(
+    name=settings.DB_ACCOUNT,
+    pwd=settings.DB_PASSWORD,
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    db=settings.DB_NAME
+)
 
 load_all_handlers(app)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('error_page/404.html'), 404 
+    return render_template('error_page/404.html'), 404
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{name}:{pwd}@{host}/{db}'.format(
-    name=settings.DB_ACCOUNT,
-    pwd=settings.DB_PASSWORD,
-    host=settings.DB_HOST,
-    db=settings.DB_NAME
-)
+
+
 
 print(str(app.url_map).replace("Map([", " ").strip("])"))
 

@@ -1,33 +1,64 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <title>Sign in &laquo; Admin</title>
-    <link rel="stylesheet" href="/static/js/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="/static/js/animate/animate.css">
-    <link rel="stylesheet" href="/static/css/admin.css">
-</head>
-<body>
-<div class="login">
-    <!-- 可以通过在 form 上添加 novalidate 取消浏览器自带的校验功能 -->
-    <!-- autocomplete="off" 关闭客户端的自动完成功能 -->
-    <form class="login-wrap" method="post" autocomplete="off" novalidate action="{{ url_for('login.adminlogin') }}">
-        <img class="avatar" src="/static/img/default.png">
-        <!-- 作为一个优秀的页面开发人员，必须考虑一个页面的不同状态下展示的内容不一样的情况 -->
-        <!-- 有错误信息时展示 -->
-        <div class="alert alert-danger">
-            <strong>错误！</strong> <?php echo $message; ?>
-        </div>
-        <div class="form-group">
-            <label for="email" class="sr-only">邮箱</label>
-            <input id="email" name="email" type="email" class="form-control" placeholder="邮箱" autofocus>
-        </div>
-        <div class="form-group">
-            <label for="password" class="sr-only">密码</label>
-            <input id="password" name="password" type="password" class="form-control" placeholder="密码">
-        </div>
-        <button class="btn btn-primary btn-block">登 录</button>
-    </form>
-</div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+    <title>登录</title>
+{% endblock %}
+{% block main %}
+    <div class="login">
+        <!-- 可以通过在 form 上添加 novalidate 取消浏览器自带的校验功能 -->
+        <!-- autocomplete="off" 关闭客户端的自动完成功能 -->
+        <form class="login-wrap  animated" autocomplete="off" novalidate action=>
+            <img class="avatar" src="/static/img/default.png">
+            <!-- 作为一个优秀的页面开发人员，必须考虑一个页面的不同状态下展示的内容不一样的情况 -->
+            <!-- 有错误信息时展示 -->
+            <div class="alert alert-danger hidden" id="error-msg">
+            </div>
+            <div class="form-group">
+                <label for="email" class="sr-only">邮箱</label>
+                <input id="email" name="email" type="email" class="form-control" placeholder="邮箱" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password" class="sr-only">密码</label>
+                <input id="password" name="password" type="password" class="form-control" placeholder="密码">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="login_submit();return false">登 录</button>
+        </form>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        (function () {
+            let login_url = "{{ url_for('login.adminlogin') }}";
+            let path_search = window.location.search;
+            let params = returnSearchObject(path_search) || {};
+
+            login_submit = function () {
+                let $errorEle = $("#error-msg");
+                $errorEle.addClass("hidden");
+                let email = $("#email").val();
+                let password = $("#password").val();
+                let emailPattern = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                switch (true) {
+                    case !email:
+                        $errorEle.text("邮箱不能为空！").removeClass("hidden");
+                        return;
+                    case !password:
+                        $errorEle.text("密码不能为空！").removeClass("hidden");
+                        return;
+                    case !emailPattern.test(email):
+                        $errorEle.text("请输入正确的邮箱格式！").removeClass("hidden");
+                        return;
+                }
+                params["email"] = email;
+                params["password"] = password;
+                $.post(login_url, params, function (data) {
+                    if (!data.status){
+                        $errorEle.text("账号或密码错误！").removeClass("hidden");
+                        return
+                    }
+                    window.location.href = data.next
+                }, "json");
+            }
+        })()
+    </script>
+{% endblock %}

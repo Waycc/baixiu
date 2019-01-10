@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    {% block title %}
+        <title>Dashboard &laquo; Admin</title>
+    {% endblock %}
+    <link rel="stylesheet" href="/static/js/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/js/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/js/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/css/animate/animate.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <script src="/static/js/nprogress/nprogress.js"></script>
+    {% block css %}
+    {% endblock %}
+</head>
+<body>
+{% block main %}
+
+{% endblock %}
+<script src="/static/js/jquery/jquery.js"></script>
+<script src="/static/js/bootstrap/js/bootstrap.js"></script>
+<script>
+    (function () {
+        // 以对象形式返回url中的参数
+        function returnSearchObject(search) {
+            if (search.indexOf("?") === -1) {
+                return null
+            }
+            var result = {};
+            let params = search.split("?")[1];
+            for (let item of params.split("&")) {
+                let split_item = item.split("=");
+                result[split_item[0]] = split_item[1]
+            }
+            return result
+        }
+
+        window.returnSearchObject = returnSearchObject;
+    })()
+</script>
+{% block js %}
+{% endblock %}
+</body>
+</html>

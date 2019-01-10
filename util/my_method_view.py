@@ -2,6 +2,7 @@ from flask import views, request, redirect
 from bson import ObjectId
 from util.session import session
 from settings import settings
+import json
 
 
 class MethodView(views.MethodView):
@@ -26,6 +27,12 @@ class MethodView(views.MethodView):
 
         session.remove(login_cookie)
 
+    def get_current_user(self):
+        current_session = self.get_session()
+        user = current_session["user"]
+        print(user)
+        return user
+
     @staticmethod
     def get_session():
         key = request.cookies.get(settings.LOGIN_COOKIE_NAME)
@@ -42,6 +49,9 @@ class MethodView(views.MethodView):
         response.set_cookie(settings.LOGIN_COOKIE_NAME, key)
         session[key] = value
 
+    @staticmethod
+    def json(value):
+        return json.dumps(value)
 
 class AuthMethodView(MethodView):
     """
@@ -62,7 +72,9 @@ class AuthMethodView(MethodView):
         """
         is_login = self.check_login()
         if not is_login:
-            return redirect(self.LOGIN_URL or settings.LOGIN_URL)
+            next_path = request.path
+            login_url = self.LOGIN_URL or settings.LOGIN_URL
+            return redirect(login_url + "?next=%s" % next_path)
         return super(AuthMethodView, self).dispatch_request(*args, **kwargs)
 
 

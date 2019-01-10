@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+    {% block title %}
+        <title>Dashboard &laquo; Admin</title>
+    {% endblock %}
+
+{% block main %}
+    <div class="main">
+
+        {% include "admin/inc/navbar.html" %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% include "admin/inc/sidebar.html" %}
+{% endblock %}
+
+{% block js %}
+<script>
+    (function () {
+
+        document.ready = function () {
+            renderAside();
+            renderUserInfo();
+        };
+
+        let renderAside = function () {
+            let currentPathName = window.location.pathname;
+            let $isClickedEle = $('[href="' + currentPathName + '"]');
+            $isClickedEle.parents("li").addClass("active");
+            $isClickedEle.parent().parent().addClass("in");
+        };
+
+        //渲染用户信息
+        let renderUserInfo = function () {
+            let userInfoUrl = "{{ url_for("account.userinfo") }}";
+            let result = null;
+            $.get(userInfoUrl, function (user) {
+                console.log(user)
+                $("#user-icon").attr("src", user.avatar);
+                $("#user-name").text(user.nickname)
+            }, "json");
+        };
+    })()
+</script>
+{% endblock %}
+
