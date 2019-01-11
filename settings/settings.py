@@ -1,3 +1,8 @@
+import os
+
+BASE_DIR = os.getcwd()
+print(BASE_DIR)
+
 DB_HOST = "localhost"
 DB_PORT = 3306
 DB_NAME = "baixiu"

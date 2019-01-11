@@ -1,4 +1,9 @@
 {% extends "admin/admin_base.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='editor.md-master/css/editormd.min.css') }}"></link>
+{% endblock %}
+
 {% block content %}
   <div class="main">
     <?php include 'inc/navbar.php'; ?>
@@ -14,12 +19,11 @@
       <form class="row">
         <div class="col-md-9">
           <div class="form-group">
-            <label for="title">标题</label>
-            <input id="title" class="form-control input-lg" name="title" type="text" placeholder="文章标题">
-          </div>
-          <div class="form-group">
-            <label for="content">标题</label>
-            <textarea id="content" class="form-control input-lg" name="content" cols="30" rows="10" placeholder="内容"></textarea>
+            <label for="title">标题</label> <input id="title" class="form-control input-lg" name="title" type="text" placeholder="文章标题"> </div> <div class="form-group">
+            <label for="content">内容</label>
+            <div id="editormd">
+                <textarea id="content" class="form-control input-lg" name="content" cols="30" rows="10" placeholder="内容"></textarea>
+            </div>
           </div>
         </div>
         <div class="col-md-3">
@@ -53,7 +57,7 @@
             </select>
           </div>
           <div class="form-group">
-            <button class="btn btn-primary" type="submit">保存</button>
+            <button class="btn btn-primary" id="article-save">保存</button>
           </div>
         </div>
       </form>
@@ -61,3 +65,29 @@
   </div>
 {% endblock %}
 
+{% block js %}
+    <script src="{{ url_for('static', filename='editor.md-master/editormd.min.js') }}"></script>
+    <script type="text/javascript">
+        console.log(111)
+        $(function() {
+            let editor = editormd("editormd", {
+                path : "{{ url_for('static', filename='editor.md-master/lib/') }}", 
+                width: "100%",
+                height: 700,
+                watch: false,
+                saveHTMLToTextarea: true,
+                imageUpload : true,
+                imageFormats : [ "jpg", "jpeg", "gif", "png", "bmp", "webp" ],
+                imageUploadURL : "{{ url_for('common.imageupload') }}"
+            });
+
+            $("#article-save").click(function() {
+                let content = editor.getMarkdown()
+                console.log(content)
+                return false
+            })
+
+
+        });  
+    </script>
+{% endblock %}

@@ -2,6 +2,7 @@ from flask import views, request, redirect
 from bson import ObjectId
 from util.session import session
 from settings import settings
+from flask import make_response
 import json
 
 
@@ -49,8 +50,10 @@ class MethodView(views.MethodView):
         session[key] = value
 
     @staticmethod
-    def json(value):
-        return json.dumps(value)
+    def json(value, content_type="application/json;charset=UTF-8"):
+        rep = make_response(json.dumps(value))
+        rep.headers['Content-Type'] = content_type
+        return rep
 
 class AuthMethodView(MethodView):
     """
