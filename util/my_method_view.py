@@ -30,7 +30,6 @@ class MethodView(views.MethodView):
     def get_current_user(self):
         current_session = self.get_session()
         user = current_session["user"]
-        print(user)
         return user
 
     @staticmethod

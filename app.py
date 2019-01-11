@@ -40,5 +40,5 @@ print(str(app.url_map).replace("Map([", " ").strip("])"))
 if __name__ == '__main__':
     #http_server = WSGIServer(('', 5000), app)
     #http_server.serve_forever()
-    app.run(thread=True)
+    app.run()
 
