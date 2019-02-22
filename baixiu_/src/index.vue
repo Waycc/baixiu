@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import myAside from "../components/aside.vue"
+    import myAside from "./components/aside.vue"
 
     export default {
         name: 'index2',
