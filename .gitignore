@@ -3,3 +3,5 @@ venv/
 _pycache__
 *.pyc
 *.swp
+node_modules
+npm-debug.log
