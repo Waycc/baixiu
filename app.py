@@ -5,8 +5,11 @@ from gevent.pywsgi import WSGIServer
 from flask import render_template
 from werkzeug.routing import BaseConverter
 from util.find_handlers import load_all_handlers
+import os
 # monkey.patch_all()
 
+#os.sys.path.append(os.getcwd())
+#print(os.sys.path)
 
 class RegexConverter(BaseConverter):
     def __init__(self, map, *args):

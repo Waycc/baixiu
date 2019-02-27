@@ -15,11 +15,14 @@ def load_all_handlers(app):
             if os.path.isdir(current_path) and "__init__.py" in os.listdir(current_path):
                 load_handlers(current_path)
 
-            elif path.endswith(".py"):
+            elif path.endswith(".py") and not path.startswith('__init__'):
                 # 去掉前面的路径，得到导入模块的路径
-                handler_path = current_path.replace(os.getcwd(), "").replace(os.sep, ".").strip(".").strip(".py")
+                handler_path = current_path.replace(os.getcwd(), "").replace(os.sep, ".").strip("py").strip(".")
                 # 导入模块
-                handler = importlib.import_module(handler_path)
+                try:
+                    handler = importlib.import_module(handler_path)
+                except:
+                    raise
                 # 遍历模块中的所有对象，找到蓝图对象，注册到app中
                 for v in handler.__dict__.values():
                     if isinstance(v, Blueprint):

@@ -3,7 +3,7 @@ from bson import ObjectId
 from util.session import session
 from settings import settings
 from flask import make_response
-import json
+from util import my_json as json
 
 
 class MethodView(views.MethodView):
@@ -27,6 +27,29 @@ class MethodView(views.MethodView):
             return
 
         session.remove(login_cookie)
+
+    def fail(self, status=False, error_code="", msg="", data="", _json=True):
+        result = {
+            "status": status,
+            "error_code": error_code,
+            'message': msg,
+            'data': data
+        }
+
+        if _json:
+            return self.json(result)
+        return result 
+
+    def success(self, status=True, error_code="", msg="", data="", _json=True):
+        result = {
+            'status': status,
+            'error_code': error_code,
+            'message': msg,
+            'data': data
+        }
+        if _json:
+            return self.json(result)
+        return result 
 
     def get_current_user(self):
         current_session = self.get_session()
@@ -53,7 +76,25 @@ class MethodView(views.MethodView):
     def json(value, content_type="application/json;charset=UTF-8"):
         rep = make_response(json.dumps(value))
         rep.headers['Content-Type'] = content_type
+        rep.headers['Access-Control-Allow-Origin'] = "*"
         return rep
+
+    def handle_options(self):
+        res = make_response()
+        res.headers['Access-Control-Allow-Origin'] = settings.ALLOW_CROS_HOST
+        res.headers['Access-Control-Allow-Headers'] = settings.ALLOW_CROS_HEADERS
+        res.headers['Access-Control-Allow-Methods'] = settings.ALLOW_CROS_METHODS
+        return res
+
+    def options(self):
+        pass
+
+    def dispatch_request(self, *args, **kwargs):
+        print("普通请求", request)
+        if request.method == 'OPTIONS':
+            print("opyion!!!")
+            return self.handle_options()
+        return super(MethodView, self).dispatch_request(*args, **kwargs)
 
 class AuthMethodView(MethodView):
     """
@@ -74,6 +115,7 @@ class AuthMethodView(MethodView):
         """
         is_login = self.check_login()
         if not is_login:
+            print(request)
             next_path = request.path
             login_url = self.LOGIN_URL or settings.LOGIN_URL
             return redirect(login_url + "?next=%s" % next_path)
