@@ -1,6 +1,7 @@
 import json
 from settings import settings
-from util import url, MethodView
+from util.url import url
+from util.my_method_view import MethodView
 from model.admin.baixiu_dev import User
 from flask import (
     Blueprint, redirect, request, render_template, make_response)
