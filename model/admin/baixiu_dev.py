@@ -1,9 +1,8 @@
-from app import app
 from settings import settings
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
 class User(db.Model):
@@ -106,4 +105,4 @@ class Category(db.Model):
 #     name = db.Column(db.String(24), nullable=False)
 #     persons = db.relationship('Person', backref='_class', lazy=True)
 #
-db.create_all()
+#db.create_all()

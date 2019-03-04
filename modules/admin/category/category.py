@@ -1,7 +1,7 @@
 import cgi
 from datetime import datetime
 from util.url import url
-from modules import admin
+from modules.admin import admin
 from flask import request, render_template, make_response
 from util.my_method_view import AuthMethodView, MethodView
 from model.admin.baixiu_dev import db, Category
@@ -12,7 +12,8 @@ class CategoryList(MethodView):
 
     def get(self):
         categories = Category.query
-        return self.success(data=categories)
+        count = categories.count()
+        return self.success(data=categories, count=count)
 
 
 

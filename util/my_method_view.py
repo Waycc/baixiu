@@ -28,25 +28,26 @@ class MethodView(views.MethodView):
 
         session.remove(login_cookie)
 
-    def fail(self, status=False, error_code="", msg="", data="", _json=True):
+    def fail(self, status=False, error_code="", msg="", data="", _json=True, **kwargs):
         result = {
             "status": status,
             "error_code": error_code,
             'message': msg,
             'data': data
         }
-
+        result.update(kwargs)
         if _json:
             return self.json(result)
         return result 
 
-    def success(self, status=True, error_code="", msg="", data="", _json=True):
+    def success(self, status=True, error_code="", msg="", data="", _json=True, **kwargs):
         result = {
             'status': status,
             'error_code': error_code,
             'message': msg,
             'data': data
         }
+        result.update(kwargs)
         if _json:
             return self.json(result)
         return result 

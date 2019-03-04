@@ -12,7 +12,19 @@ from model.admin.baixiu_dev import Post, db, Category, User
 class PostList(MethodView):
 
     def get(self):
-        posts = Post.query
+        page = int(request.values.get('page', 1))
+        page_size = int(request.values.get('pageSize', 20))
+        category_id = request.values.get('category_id', 'all')
+        post_status = request.values.get('status', 'all')
+        cond = {}
+        if category_id != 'all':
+            cond['category_id'] = category_id
+        if post_status != 'all':
+            cond['status'] = post_status
+
+        posts = Post.query.filter_by(**cond)
+        count = posts.count()
+        posts = posts.offset((page-1)*page_size).limit(page_size)
         new_posts = []
         for each_post in posts:
             author_id = each_post.author_id
@@ -21,7 +33,7 @@ class PostList(MethodView):
             each_post['category'] = Category.query.get(category_id)
             new_posts.append(each_post)
 
-        return self.success(data=new_posts)
+        return self.success(data=new_posts, count=count)
 
     def post(self):
         return self.get()
