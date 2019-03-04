@@ -12,6 +12,10 @@ from model.admin.baixiu_dev import Post, db, Category, User
 class PostList(MethodView):
 
     def get(self):
+        post_id = request.values.get('postId')
+        if post_id:
+            post_obj = Post.query.get(int(post_id))
+            return self.success(data=post_obj) 
         page = int(request.values.get('page', 1))
         page_size = int(request.values.get('pageSize', 20))
         category_id = request.values.get('category_id', 'all')
@@ -54,7 +58,25 @@ class PostAdd(MethodView):
         db.session.commit()
         return self.success()
 
+@url('/post/delete', admin)
+class PostDelete(MethodView):
+    def post(self):
+        post_id = request.form.get('postId')
+        _post = Post.query.get(int(post_id))
+        db.session.delete(_post)
+        db.session.commit()
+        return self.success()
 
-        
-
-           
+@url('/post/batchDelete', admin)
+class PostBatchDelete(MethodView):
+    def post(self):
+        post_ids = request.form.get('postIds', [])
+        if not post_ids:
+            return self.fail()
+        _ids = list(map(lambda x: int(x), post_ids.split(',')))
+        post_objs = Post.query.filter(Post.id.in_(_ids)).all()
+        if post_objs:
+            for p in post_objs:
+                db.session.delete(p)
+            db.session.commit()
+        return self.success()

@@ -1,7 +1,6 @@
 {
   "presets": [
-    "env",
-    "stage-2"
+    "@babel/env",
   ],
   "plugins": [
     [
@@ -11,6 +10,6 @@
         "styleLibraryName": "theme-chalk"
       }
     ],
-    "syntax-dynamic-import"
+    "@babel/syntax-dynamic-import"
   ]
 }

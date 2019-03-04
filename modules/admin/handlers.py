@@ -24,5 +24,5 @@ admin = Blueprint('admin', __name__, url_prefix="/admin")
 @url('/', admin)
 class ShowPage(AuthMethodView):
     def get(self):
-        page_path = "admin/dist/index.html"
+        page_path = "dist/index.html"
         return render_template(page_path)
