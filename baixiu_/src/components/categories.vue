@@ -31,7 +31,7 @@
                 <div class="col-md-8">
                     <div class="page-action">
                         <!-- show when multiple checked -->
-                        <a class="btn btn-danger btn-sm" href="javascript:;" style="">批量删除</a>
+                        <a class="btn btn-danger btn-sm" href="javascript:;" style="" @click="batchDelete">批量删除</a>
                     </div>
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
@@ -59,7 +59,7 @@
                             <td>{{ category.des }}</td>
                             <td class="text-center">
                                 <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                                <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                                <a href="javascript:;" class="btn btn-danger btn-xs" @click.stop="deleteCategory(category.id)">删除</a>
                             </td>
                         </tr>
                         </tbody>
@@ -86,23 +86,35 @@
             }
         },
         created: function () {
-            reqHandler.getCategory().then(res => {
+            this.getCategory()
+        },
+        methods: {
+            resetForm(){
+                this.categoriesName = ''
+                this.categoriesDes = ''
+            },
+            getCategory(){
+                reqHandler.getCategory().then(res => {
                 if (!res.data.status) {
                     alert(res.data.message || '获取类别失败')
                     return
                 }
                 this.categoriesList = res.data.data
             })
-        },
-        methods: {
+            },
             addCategory() {
+                if (!this.categoriesName){
+                    alert('请输入类别名')
+                    return
+                }
                 reqHandler.addCategory(this.paramsObj).then(res => {
                     if (!res.data.status){
                         alert('添加失败')
                         return
                     }
                     alert('添加成功')
-                    this.$router.go(0)
+                    this.getCategory();
+                    this.resetForm()
                 })
             },
             handleCheck(categoryId) {
@@ -122,6 +134,28 @@
                     if (!this.categoriesIds.includes(item.id)){
                         this.categoriesIds.push(item.id)
                     }
+                })
+            },
+            deleteCategory(categoryId){
+                let isDelete = confirm("是否删除")
+                if (!isDelete) return
+                reqHandler.deleteCategory({categoryId: categoryId}).then(res => {
+                    if (res.data.status){
+                        alert('删除成功')
+                        this.getCategory()
+                    }
+                })
+            },
+            batchDelete(){
+                if (this.categoriesIds.length === 0){
+                    alert('请先选择删除项')
+                    return
+                }
+                let isDelete = confirm('是否批量删除已选中项？')
+                if (!isDelete) return
+                reqHandler.batchDeleteCategory({categoryIds: this.categoriesIds}).then(res => {
+                    alert('批量删除成功')
+                    this.getCategory()
                 })
             }
         },

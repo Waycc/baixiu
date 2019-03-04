@@ -11,7 +11,7 @@
             </div> -->
             <div class="page-action">
                 <!-- show when multiple checked -->
-                <a class="btn btn-danger btn-sm" href="javascript:;">批量删除</a>
+                <a class="btn btn-danger btn-sm" href="javascript:;" @click="batchDelete">批量删除</a>
                 <form class="form-inline">
                     <select v-model="postCategory" name="" class="form-control input-sm">
                         <option value="all">所有分类</option>
@@ -69,8 +69,8 @@
                     <td class="text-center">{{ post.created }}</td>
                     <td class="text-center">{{ statusMap[post.status]}}</td>
                     <td class="text-center">
-                        <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                        <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                        <a href="javascript:;" class="btn btn-info btn-xs" @click="updatePost(post.id)">编辑</a>
+                        <a href="javascript:;" class="btn btn-danger btn-xs" @click.stop="deletePost(post.id)">删除</a>
                     </td>
                 </tr>
                 </tbody>
@@ -113,8 +113,17 @@
             }
         },
         methods: {
+            updatePost(postId){
+                this.$router.push({
+                    name: 'postAdd',
+                    params: {
+                        postId: postId
+                    }
+                })
+            },
             postFilter() {
                 this.getPost()
+                this.postIds = []
             },
             checkAll() {
                 if (this.postList.length === this.postIds.length) {
@@ -157,6 +166,29 @@
                     }
                     this.categoriesList = res.data.data
                 })
+            },
+            deletePost(postId){
+                let isDelete = confirm("是否删除")
+                if (!isDelete) return
+                reqHandler.deletePost({postId: postId}).then(res => {
+                    if (res.data.status){
+                        alert('删除成功')
+                        this.getPost()
+                    }
+                })
+            },
+            batchDelete(){
+                if (this.postIds.length === 0){
+                    alert('请先选择删除项')
+                    return
+                }
+                let isDelete = confirm('是否批量删除已选中项？')
+                if (!isDelete) return
+                reqHandler.batchDeletePost({postIds: this.postIds}).then(res => {
+                    alert('批量删除成功')
+                    this.getPost()
+                })
+                console.log(this.postIds)
             }
         },
         created() {
