@@ -1,8 +1,8 @@
 <template>
     <div class="my-aside">
         <div class="profile">
-            <img class="avatar" src="/src/static/uploads/avatar.jpg" id="user-icon" title="头像">
-            <h3 class="name" id="user-name">布头儿</h3>
+            <img class="avatar" :src="userImg || '/src/static/uploads/avatar.jpg'" id="user-icon" title="头像">
+            <h3 class="name" id="user-name">{{userAlias}}</h3>
         </div>
 
         <el-collapse v-model="activeNames" class="my-nav">
@@ -34,9 +34,6 @@
                         <router-link to="/nav-menus">导航菜单</router-link>
                     </li>
                     <li>
-                        <router-link to="/slides">图片轮播</router-link>
-                    </li>
-                    <li>
                         <router-link to="/settings">网站设置</router-link>
                     </li>
                 </ul>
@@ -59,6 +56,14 @@
                 activeNames: [],
             };
         },
+        computed:{
+            userAlias(){
+                return this.$store.state.userInfo.alias
+            },
+            userImg(){
+                return this.$store.state.userInfo.img_url
+            }
+        },
         methods: {
             initTab() {
                 this.currentPath = this.$route.path.replace('/', '');
@@ -80,7 +85,10 @@
         },
         watch: {
             '$route': 'initTab'
-        }
+        },
+        // components:{
+        //     Collapse
+        // }
     }
 </script>
 

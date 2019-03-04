@@ -23,11 +23,25 @@
 </template>
 
 <script>
-    import myAside from "./components/aside.vue"
+    import myAside from "./components/aside"
+    import reqHandler from './modules/index'
 
     export default {
         name: 'index2',
         components: {myAside},
+        mounted(){
+            let userInfo;
+            reqHandler.getUser({userId: 1}).then(res => {
+                if (!res.data.status){
+                    alert(res.data.message);
+                    return
+                }
+                userInfo = res.data.data;
+                console.log(userInfo);
+                this.$store.commit('changeUserInfo', userInfo);
+            });
+
+        }
 
     };
 </script>

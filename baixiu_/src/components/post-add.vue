@@ -28,52 +28,100 @@
                     <div class="form-group">
                         <label for="category">所属分类</label>
                         <select id="category" class="form-control" name="category" v-model="postCategory">
-                            <option value="1">未分类</option>
-                            <option value="2">潮生活</option>
+                            <!--<option value=0>潮生活</option>-->
+                            <option v-for="category in categoriesList" :key="category.id" :value="category.id">{{category.name}}</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="created">发布时间</label>
-                        <input id="created" class="form-control" name="created" type="datetime-local">
-                    </div>
+                    <!--<div class="form-group">-->
+                    <!--<label for="created">发布时间</label>-->
+                    <!--<input id="publish-date" class="form-control" name="created" type="test">-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label for="status">状态</label>
                         <select id="status" class="form-control" name="status" v-model="postStatus">
                             <option value="drafted">草稿</option>
-                            <option value="published">已发布</option>
+                            <option value="published">发布</option>
                         </select>
                     </div>
                 </div>
             </form>
 
         </div>
+
     </div>
 
 </template>
 
 <script>
-    import vueEditor from './vue-editor.vue'
+    import vueEditor from './vue-editor'
+    import reqHandler from '@/modules/index'
+
     let cvm = {
         name: 'postAdd',
         components: {
             vueEditor
         },
-        data:function () {
+        data: function () {
             return {
                 content: '',
                 postTitle: '',
                 postCategory: '1',
                 postStatus: 'drafted',
+                categoriesList: [],
 
+            }
+        },
+        computed: {
+            paramsObj() {
+                return {
+                    content: this.content,
+                    title: this.postTitle,
+                    category_id: this.postCategory,
+                    status: this.postStatus,
+                    author_id: this.$store.state.userInfo.id,
+                    tags: '',
+                    views: '',
+
+                }
             }
         },
         methods: {
             savePost(event) {
-                console.log(this.content)
+                switch (true) {
+                    case (!this.postTitle): {
+                        alert('标题不能为空')
+                        return
+                    }
+                    case (!this.content): {
+                        alert('内容不能为空')
+                        return
+                    }
+                }
+                reqHandler.addPost(this.paramsObj).then(res => {
+                    if (res.data.status) {
+                        alert('添加文章成功')
+                        this.$router.go(0)
+                    } else {
+                        alert(res.data.message || '添加文章失败')
+                    }
+                })
             },
+            getCategory() {
+                reqHandler.getCategory().then(res => {
+                    if (!res.data.status) {
+                        alert(res.data.message || '获取类别失败')
+                        return
+                    }
+                    this.categoriesList = res.data.data
+                })
+            }
+        },
+        created() {
+            this.getCategory()
         }
     };
     export default cvm
+
 </script>
 
 <style scoped>
