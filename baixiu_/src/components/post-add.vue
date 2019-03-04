@@ -117,7 +117,22 @@
             }
         },
         created() {
+
             this.getCategory()
+        },
+        beforeRouteEnter(to, from, next){
+            if (to.params.postId){
+                reqHandler.getPost({postId: to.params.postId}).then(res => {
+                    let data = res.data
+                    if (data.status){
+                        console.log(data)
+                        console.log(this.content)
+                        this.content = data.data.content
+                        this.title = data.data.title
+                        this.postStatus = data.data.status
+                    }
+                })
+            }
         }
     };
     export default cvm

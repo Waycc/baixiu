@@ -21,7 +21,7 @@ var router = new VueRouter({
         {'path': '/comments', component: comments},
         {'path': '/categories', component: categories},
         {'path': '/nav-menus', component: navMenus},
-        {'path': '/post-add', component: postAdd},
+        {'path': '/post-add', component: postAdd, name:'postAdd'},
         {'path': '/posts', component: posts},
         {'path': '/settings', component: settings},
     ]
