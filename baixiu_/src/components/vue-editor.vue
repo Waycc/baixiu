@@ -21,10 +21,11 @@
         components: {
             quillEditor
         },
-        model: {
-            prop: 'content',  // 父组件通过v-model传过来的值，content可以定义为其他名字
-            event: 'sendParent'   // $emit时传递给父组件v-model的值
-        },
+        // model: {
+        //     prop: 'content',  // 父组件通过v-model传过来的值，content可以定义为其他名字
+        //     event: 'sendParent'   // $emit时传递给父组件v-model的值
+        // },
+        props: ['content'],
         data() {
             return {
                 content: "",

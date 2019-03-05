@@ -31,6 +31,8 @@ export default {
     getPost(params) {return instance.get('admin/post/list', {params:params})},
     // 添加新文章
     addPost(params) {return instance.post('admin/post/add', JSON.stringify(params))},
+    // 修改文章
+    updatePost(params) {return instance.post('admin/post/update', JSON.stringify(params))},
     //删除文章
     deletePost(params) {
         let param = getFormParams(params)
@@ -49,12 +51,12 @@ export default {
     getCategory(params) {return instance.get('admin/category/list', {params:params})},
     // 添加类别
     addCategory(params) { return instance.post('admin/category/add', JSON.stringify(params))},
-        //删除文章
+    //删除类别
     deleteCategory(params) {
         let param = getFormParams(params)
         return formInstance.post('admin/category/delete', param)
     },
-    // 批量删除文章
+    // 批量删除类别
     batchDeleteCategory(params) {
         let param = getFormParams(params)
         return formInstance.post('admin/category/batchDelete', param)
