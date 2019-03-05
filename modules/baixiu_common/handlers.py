@@ -2,7 +2,7 @@ import os
 import time
 from settings import settings
 from util.url import url
-from util import AuthMethodView
+from util.my_method_view import AuthMethodView
 from flask import Blueprint
 from flask import request, render_template
 

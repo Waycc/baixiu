@@ -1,7 +1,7 @@
 <template>
     <div class="my-aside">
         <div class="profile">
-            <img class="avatar" :src="userImg || '/src/static/uploads/avatar.jpg'" id="user-icon" title="头像">
+            <img class="avatar" :src="userImg || '/static/uploads/avatar.jpg'" id="user-icon" title="头像">
             <h3 class="name" id="user-name">{{userAlias}}</h3>
         </div>
 
