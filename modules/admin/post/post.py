@@ -15,7 +15,11 @@ class PostList(MethodView):
         post_id = request.values.get('postId')
         if post_id:
             post_obj = Post.query.get(int(post_id))
-            return self.success(data=post_obj) 
+            category_id = post_obj.category_id
+            post_dict = post_obj.to_dict()
+            category_obj = Category.query.get(category_id)
+            post_dict['category_id'] = 0 if not category_obj else category_id
+            return self.success(data=post_dict) 
         page = int(request.values.get('page', 1))
         page_size = int(request.values.get('pageSize', 20))
         category_id = request.values.get('category_id', 'all')
@@ -49,6 +53,7 @@ class PostAdd(MethodView):
         post_data = request.json
         if not post_data:
             return self.fail(msg='参数为空')
+        post_data.pop('postId', '')
         post_data['title'] = cgi.escape(post_data['title'])
         current_time = datetime.now()
         post_data['created'] = datetime.strftime(current_time, '%Y-%m-%d %H:%M:%S')
@@ -57,6 +62,23 @@ class PostAdd(MethodView):
         db.session.add(post_obj)
         db.session.commit()
         return self.success()
+
+
+@url('/post/update', admin)
+class PostUpdate(MethodView):
+    def post(self):
+        post_data = request.json
+        post_id = post_data.pop('postId', '')
+        print('postdata', post_data, post_id)
+        if not post_data or not post_id:
+            return self.fail(msg='参数或文章id为空')
+        post_obj = Post.query.get(post_id)
+        for k, v in post_data.items():
+            setattr(post_obj, k, v)
+
+        db.session.commit()
+        return self.success()
+
 
 @url('/post/delete', admin)
 class PostDelete(MethodView):

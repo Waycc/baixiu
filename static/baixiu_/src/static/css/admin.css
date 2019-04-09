@@ -24,7 +24,7 @@ body {
   position: relative;
 
   overflow: hidden;
-
+  margin-right: 100px;
   min-width: 844px;
   min-height: 100%;
   padding: 70px 5px 20px 185px;

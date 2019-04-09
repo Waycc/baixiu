@@ -79,7 +79,8 @@ class Post(db.Model):
             "content": self.content,
             "updated": self.updated,
             "author_id": self.author_id,
-            "status": self.status
+            "status": self.status,
+            "category_id": self.category_id,
         }
 
 

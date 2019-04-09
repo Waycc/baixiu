@@ -9,14 +9,16 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/adminLogout">
                         <i class="fa fa-sign-out"></i>退出
                     </a>
                 </li>
             </ul>
         </nav>
 
-        <router-view class="main"></router-view>
+        <transition name="slide-fade">
+            <router-view class="main"></router-view>
+        </transition>
         <my-aside></my-aside>
 
     </div>
@@ -47,5 +49,21 @@
 </script>
 
 <style scoped>
+.slide-fade{
+  position: absolute;
+    /*left:0;right: 0;*/
+}
+.slide-fade-enter-active {
+  transition: all 1.2s ease;
+}
+.slide-fade-leave-active {
 
+  transition: all .1s cubic-bezier(2.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+{
+  /*left:0;right: 0;*/
+  transform: translateX(50px);
+  opacity: 0;
+}
 </style>

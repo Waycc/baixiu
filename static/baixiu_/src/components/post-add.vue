@@ -18,7 +18,7 @@
                                name="title" type="text" placeholder="文章标题">
                     </div>
                     <div class="form-group">
-                        <vue-editor v-model="content"></vue-editor>
+                        <vue-editor :content="content" @sendParent="changeContent"></vue-editor>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" id="article-save" @click.prevent="savePost">保存</button>
@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <label for="category">所属分类</label>
                         <select id="category" class="form-control" name="category" v-model="postCategory">
-                            <!--<option value=0>潮生活</option>-->
+                            <option value=0>未分类</option>
                             <option v-for="category in categoriesList" :key="category.id" :value="category.id">{{category.name}}</option>
                         </select>
                     </div>
@@ -65,15 +65,17 @@
             return {
                 content: '',
                 postTitle: '',
-                postCategory: '1',
+                postCategory: 0,
                 postStatus: 'drafted',
                 categoriesList: [],
+                postId: '',
 
             }
         },
         computed: {
             paramsObj() {
                 return {
+                    postId: this.postId,
                     content: this.content,
                     title: this.postTitle,
                     category_id: this.postCategory,
@@ -87,6 +89,7 @@
         },
         methods: {
             savePost(event) {
+                console.log(this.paramsObj)
                 switch (true) {
                     case (!this.postTitle): {
                         alert('标题不能为空')
@@ -97,6 +100,16 @@
                         return
                     }
                 }
+                if (this.postId){
+                    reqHandler.updatePost(this.paramsObj).then(res => {
+                        if (res.data.status){
+                            alert('修改文章成功')
+                            this.$router.go(0)
+                        }
+                    })
+                    return
+                }
+
                 reqHandler.addPost(this.paramsObj).then(res => {
                     if (res.data.status) {
                         alert('添加文章成功')
@@ -114,10 +127,12 @@
                     }
                     this.categoriesList = res.data.data
                 })
+            },
+            changeContent(val) {
+                this.content = val
             }
         },
         created() {
-
             this.getCategory()
         },
         beforeRouteEnter(to, from, next){
@@ -125,14 +140,19 @@
                 reqHandler.getPost({postId: to.params.postId}).then(res => {
                     let data = res.data
                     if (data.status){
-                        console.log(data)
-                        console.log(this.content)
-                        this.content = data.data.content
-                        this.title = data.data.title
-                        this.postStatus = data.data.status
+                        next(vm => {
+                            console.log(data.data.title)
+                            vm.postId = data.data.id
+                            vm.content = data.data.content
+                            vm.postTitle = data.data.title
+                            vm.postStatus = data.data.status
+                            vm.postCategory = data.data.category_id || 0
+                        })
                     }
                 })
+                return
             }
+            next()
         }
     };
     export default cvm

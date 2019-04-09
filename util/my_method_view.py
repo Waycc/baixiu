@@ -1,3 +1,4 @@
+import datetime
 from flask import views, request, redirect
 from bson import ObjectId
 from util.session import session
@@ -91,7 +92,7 @@ class MethodView(views.MethodView):
         pass
 
     def dispatch_request(self, *args, **kwargs):
-        print("普通请求", request)
+        print("普通请求", request, "time: %s"%datetime.datetime.now())
         if request.method == 'OPTIONS':
             print("opyion!!!")
             return self.handle_options()
@@ -116,7 +117,7 @@ class AuthMethodView(MethodView):
         """
         is_login = self.check_login()
         if not is_login:
-            print(request)
+            print('没有登录的接口', request, "time: %s"%datetime.datetime.now())
             next_path = request.path
             login_url = self.LOGIN_URL or settings.LOGIN_URL
             return redirect(login_url + "?next=%s" % next_path)

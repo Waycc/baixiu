@@ -31,7 +31,7 @@ module.exports = {
         new BundleAnalyzerPlugin(),
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-            filename: "style.css",
+            filename: "[name].css",
             //chunkFilename: "[id].css"
         })
     ],
@@ -44,7 +44,12 @@ module.exports = {
                 //'style-loader', 
                 'css-loader'
             ]}, // 处理 CSS 文件的 loader
-            {test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader']}, // 处理 less 文件的 loader
+            {test: /\.less$/, use: [
+                {
+                    loader: MiniCssExtractPlugin.loader,
+                },
+                'css-loader', 
+                'less-loader']}, // 处理 less 文件的 loader
             {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']}, // 处理 scss 文件的 loader
             {test: /\.(jpg|png|gif|bmp|jpeg)$/, use: 'url-loader?limit=7631&name=[hash:8]-[name].[ext]'}, // 处理 图片路径的 loader
             // limit 给定的值，是图片的大小，单位是 byte， 如果我们引用的 图片，大于或等于给定的 limit值，则不会被转为base64格式的字符串， 如果 图片小于给定的 limit 值，则会被转为 base64的字符串

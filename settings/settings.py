@@ -13,7 +13,7 @@ MODULES_PATH = 'modules'  # 视图函数路径
 
 LOGIN_URL = '/adminLogin.html'  # 登录地址
 LOGIN_COOKIE_NAME = 'auth'  # seesion存放的key
-ADMIN_INDEX = '/admin/index.html'
+ADMIN_INDEX = '/admin'
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
